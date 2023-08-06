@@ -1,0 +1,20 @@
+.createpost__container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.createpost__container__box {
+    width: 100%;
+    max-width: 400px;
+    margin: auto 10px;
+    height: 350px;
+    background-color: yellow;
+    position: relative;
+}

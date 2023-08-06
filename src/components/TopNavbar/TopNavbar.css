@@ -1,0 +1,48 @@
+.topnavbar__container {
+    display: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
+    height: 40px;
+}
+
+.topnavbar__container__box {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3px 15px;
+}
+
+.topnavbar__container__box > a {
+    font-family: 'Grand Hotel', cursive;
+    font-weight: 400;
+    font-size: 28px;
+    color: black;
+    margin: 0;
+    text-decoration: none;
+}
+
+.topnavbar__container__box__icons {
+    display: flex;
+}
+
+.topnavbar__container__box__icons > svg {
+    margin: 0 5px;
+}
+
+@media only screen and (max-width: 480px){
+    .topnavbar__container {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 400px){
+
+}
+
+@media only screen and (max-width: 360px){
+    
+}

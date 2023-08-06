@@ -1,0 +1,49 @@
+.bottomnavbar__container {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
+    height: 40px;
+}
+
+.bottomnavbar__container__box {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 3px 15px;
+}
+
+.bottom__menu__link {
+    text-decoration: none;
+    color: rgb(0 0 0 / 70%);
+    padding: 5px;
+}
+
+.bottom__menu__link:hover, .activeBottomLink {
+    background-color: rgb(0 0 0 / 20%);
+    color: black;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: all 0.1s;
+}
+
+.bottomnavbar__container__box > a > svg {
+    vertical-align: middle;
+}
+
+@media only screen and (max-width: 480px){
+    .bottomnavbar__container {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 400px){
+
+}
+
+@media only screen and (max-width: 360px){
+    
+}
