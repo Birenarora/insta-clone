@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import './SideNavbar.css'
 import { NavLink, useLocation } from 'react-router-dom'
-import { AccountCircle, AddCircleOutline, AllInboxRounded, CancelRounded, Explore, GroupWork, HomeOutlined, LinkedCameraRounded, Mouse, Notifications, OndemandVideo, Search } from '@mui/icons-material'
+import { AccountCircle, AddCircleOutline, CancelRounded, Explore, HomeOutlined, Notifications, OndemandVideo, Search } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useOutsideClick } from '../../hooks/OutsideClick';
 
@@ -92,7 +92,7 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
             const isActiveLink = (routeName.pathname.includes(value.to) && value.to.length > 1) || routeName.pathname === value.to
 
             return (
-              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id == "7" ? handleCreatePostOpen : () => {return null}}>
+              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : () => {return null}}>
                 <div className="menu__link__icon">{value.icon}</div>
                 <div className="menu__link__text" style={{ display: isOpen ? 'block' : 'none' }}>{value.item}</div>
               </NavLink>

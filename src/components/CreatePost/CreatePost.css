@@ -15,6 +15,72 @@
     max-width: 400px;
     margin: auto 10px;
     height: 350px;
-    background-color: yellow;
+    background-color: white;
     position: relative;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
 }
+
+.createpost__container__box__header {
+    height: 30px;
+    display: flex;
+    /* justify-content: space-between; */
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.createpost__container__box__header > button {
+    border: 0;
+    background-color: transparent;
+    color: skyblue;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.createpost__container__box__header > button:hover {
+    color: rgb(84, 163, 194);
+ }
+
+ .createpost__container__box__body {
+    width: 100%;
+    height: 100%;
+    /* overflow: scroll; */
+ }
+
+ .createpost__container__box__body__image_uploader {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+ }
+
+ .createpost__container__box__body__image_uploader > span {
+    margin: 10px 0;
+ }
+
+ .createpost__container__box__body__image_uploader > button {
+    height: 25px;
+    background-color: skyblue;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+ }
+
+ .createpost__container__box__body__form > form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 30px;
+ }
+
+ .createpost__container__box__body__form > form > div {
+    margin-top: 10px;
+ }
+
+ .createpost__container__box__body__form > form > button {
+    margin-top: 20px;
+ }
