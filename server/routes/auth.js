@@ -84,7 +84,8 @@ router.post('/signin', (req,res) => {
                 // })
 
                 const jwt_token = jwt.sign({_id: user._id}, process.env.JWT_SECRET)
-                res.json({token: jwt_token})
+                const { _id, name, email } = user
+                res.json({token: jwt_token, user: { _id, name, email }})
             } else {
                 return res.status(200).json({
                     "statusCode": 422,

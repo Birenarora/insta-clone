@@ -12,7 +12,30 @@ const postSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
-        default: 'no photo'
+        required: true
+    },
+    likes: [
+        {
+            type: ObjectId,
+            ref: 'User'
+        }
+    ],
+    likes_count_visibility: {
+        type: Boolean,
+        default: true
+    },
+    comments: [{
+        text: String,
+        commentedBy: {
+            type: ObjectId,
+            ref: 'User'
+        },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: null }
+    }],
+    commenting_visibility: {
+        type: Boolean,
+        default: true
     },
     postedBy: {
         type: ObjectId,
