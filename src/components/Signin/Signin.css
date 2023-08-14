@@ -19,11 +19,15 @@
     border: 0.5px solid rgb(0 0 0 / 5%);
 }
 
+.signin__container__box > form {
+    width: 100%;
+}
+
 .signin__container > div:nth-child(2) {
     margin-top: 0;
 }
 
-.signin__container__box > h1 {
+.signin__container__box > form > h1 {
     font-family: 'Grand Hotel', cursive;
     font-weight: 400;
     font-size: 48px;
@@ -64,7 +68,7 @@
     top: 10px;
 }
 
-.signin__container__box__subbox > button {
+.signin__submit__button {
     background-color: skyblue;
     width: 100%;
     margin: 15px 0;
@@ -78,7 +82,7 @@
     cursor: pointer;
 }
 
-.signin__container__box__subbox > button:hover {
+.signin__submit__button:hover {
     background-color: rgb(84, 163, 194);
 }
 
@@ -91,3 +95,34 @@
     text-decoration: underline;
     color: blue;
 }
+
+.form__errors {
+    color: red;
+    font-size: 14px;
+    text-align: start;
+    margin-bottom: 5px;
+}
+
+.loader::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 45%;
+    top: 26px;
+    border: 3px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 

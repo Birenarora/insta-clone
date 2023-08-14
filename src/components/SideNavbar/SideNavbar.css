@@ -18,7 +18,7 @@
 
 .sidebar__container__box__header {
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .sidebar__container__box__header > a, .sidebar__container__box__footer > a, .menu__link {
@@ -28,6 +28,7 @@
     align-items: center;
     margin: 0 15px;
     padding: 12px 3px;
+    margin-bottom: 3px;
 }
 
 .sidebar__container__box__header > a {
@@ -120,6 +121,53 @@
 
 .sidebar__container__searchbox__body {
     overflow: scroll;
+    overflow-x: hidden;
+}
+
+.sidebar__container__box__footer {
+    position: relative;
+}
+
+.sidebar__container__box__footer__more__menu {
+    background-color: white;
+    position: absolute;
+    bottom: 45px;
+    left: 15px;
+    width: 250px;
+    z-index: 1;
+    border-radius: 15px;
+    box-shadow: 0 0 5px 5px rgb(0 0 0 / 20%);
+}
+
+.sidebar__container__box__footer__more__menu > ul {
+    padding: 0;
+    margin: 0;
+}
+
+.more__menu__items {
+    list-style: none;
+    text-align: start;
+    padding: 20px;
+}
+
+.more__menu__items:nth-child(2) {
+    border-bottom: 5px solid rgb(0 0 0 / 20%);
+}
+
+.more__menu__link {
+    text-decoration: none;
+    color: rgb(0 0 0 / 50%);
+    display: flex;
+    align-items: center;
+}
+
+.more__menu__link > svg {
+    margin-right: 10px;
+}
+
+.more__menu__link:hover {
+    color: black;
+    font-weight: 700;
 }
 
 @media only screen and (max-width: 1200px){

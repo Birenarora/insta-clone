@@ -38,7 +38,7 @@
     align-items: flex-start; */
     display: block;
     /* height: 500px; */
-    /* width: 400px; */
+    width: 100%;
     /* max-width: 400px;
     margin: 20px auto; */
     background-color: white;
@@ -47,7 +47,7 @@
     margin: 15px auto;
 }
 
-.home__container__box__card__header {
+.home__container__box__card__header, .comments__container__box__card__header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -55,13 +55,13 @@
     margin: 5px 0;
 }
 
-.home__container__box__card__header__left {
+.home__container__box__card__header__left, .comments__container__box__card__header__left {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.home__container__box__card__header__left > img {
+.common__image {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -73,7 +73,7 @@
     font-weight: 600;
 }
 
-.home__container__box__card__header__left > span:nth-child(4) {
+.common__time {
     font-size: 14px;
     color: rgb(180 180 180);
 }
@@ -86,13 +86,13 @@
     margin: 0 10px;
 }
 
-.home__container__box__card__header__right {
+.home__container__box__card__header__right, .comments__container__box__card__header__right {
     display: flex;
     margin-right: 10px;
     cursor: pointer;
 }
 
-.home__container__box__card__header__right > span {
+.home__container__box__card__header__right > span, .comments__container__box__card__header__right > span {
     width: 3px;
     height: 3px;
     border-radius: 50%;
@@ -173,6 +173,14 @@
 
 .home__container__box__card__footer {
     width: 100%;
+    position: relative;
+}
+
+.comments__container__box__card__footer {
+    box-sizing: border-box;
+    width: 100%;
+    position: relative;
+    padding: 0 10px;
 }
 
 .post__comment__input {
@@ -182,6 +190,125 @@
     outline: none;
     border: none;
     border-bottom: 1px solid gray;
+    padding-right: 65px;
+}
+
+.post__commentbox__input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    /* border-bottom: 1px solid gray; */
+    padding-right: 65px;
+}
+
+.post__comment__button {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    background-color: skyblue;
+    color: white;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post__commentbox__button {
+    position: absolute;
+    right: 20px;
+    top: 3px;
+    background-color: skyblue;
+    color: white;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments__container, .postoptions__container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.comments__container__box {
+    width: 100%;
+    max-width: 500px;
+    margin: auto 10px;
+    height: 450px;
+    background-color: white;
+    position: relative;
+    border-radius: 5px;
+}
+
+.comments__container__box__card {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comments__container__box__card__body {
+    flex: 1;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.comments__container__box__card__body__content {
+    display: flex;
+    /* align-items: center; */
+    margin: 10px 0;
+}
+
+.comments__container__box__card__body__subcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.common__content {
+    text-align: start;
+    margin-bottom: 5px;
+}
+
+.postoptions__container__box {
+    width: 100%;
+    max-width: 300px;
+    margin: auto 10px;
+    /* height: 350px; */
+    background-color: white;
+    position: relative;
+    border-radius: 10px;
+}
+
+.postoptions__container__box > ul {
+    margin: 0;
+    padding: 0;
+}
+
+.postoptions__menu__items {
+    list-style: none;
+    padding: 15px 0;
+    border-bottom: 1px solid rgb(0 0 0 / 10%);
+    cursor: pointer;
+}
+
+.postoptions__menu__items:nth-child(1) {
+    color: red;
+    font-weight: 600;
 }
 
 @media only screen and (max-width: 1200px){

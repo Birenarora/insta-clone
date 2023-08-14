@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useState } from 'react'
 import './SideNavbar.css'
-import { NavLink, useLocation } from 'react-router-dom'
-import { AccountCircle, AddCircleOutline, CancelRounded, Explore, HomeOutlined, Notifications, OndemandVideo, Search } from '@mui/icons-material'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { AccountCircle, AddCircleOutline, CancelRounded, Explore, HomeOutlined, LightModeOutlined, Notifications, OndemandVideo, Search, SettingsOutlined } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useOutsideClick } from '../../hooks/OutsideClick';
+import { useStateValue } from '../../hooks/StateProvider';
 
 function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => void }) {
 
@@ -60,10 +61,14 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
 
   const [isOpen, setIsOpen] = useState(true)
   const [searchText, setSearchText] = useState('')
-  const routeName = useLocation()  
+  const routeName = useLocation()
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
+  const { state, dispatch } = useStateValue()
+  const navigate = useNavigate()
 
   const divRef = useOutsideClick(() => {
     setIsOpen(true)
+    // setIsMoreMenuOpen(false)
   })
 
   const toggle = () => setIsOpen(!isOpen)
@@ -76,6 +81,24 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
     }
     
   }  
+
+  const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+
+    let userData = JSON.parse(localStorage.getItem('user-details') || '{}')
+
+    console.log(userData);
+    
+    if (state.user_details || Object.keys(userData).length !== 0) {
+      dispatch({
+        type: 'LOGOUT_USER'
+      })
+
+      localStorage.setItem('user-details', JSON.stringify({}))
+    }
+
+    window.location.href = '/'
+  }
 
   return (
     <div className='sidebar__container'>
@@ -100,10 +123,31 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
           })}
           </div>
           <div className="sidebar__container__box__footer">
-            <NavLink to="#">
+            <NavLink to="#" className='sidebar__container__box__footer__more' onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}>
               <div className="sidebar__container__box__footer__icon"><MenuIcon fontSize='medium'/></div>
               <div className="sidebar__container__box__footer__text"  style={{ display: isOpen ? 'block' : 'none' }}>More</div>
             </NavLink>
+            <div className="sidebar__container__box__footer__more__menu" style={{ display: isMoreMenuOpen ? 'block' : 'none' }}>
+                <ul>
+                  <li className='more__menu__items'>
+                    <NavLink to="#" className='more__menu__link'>
+                      <SettingsOutlined />
+                      <span>Settings</span>
+                    </NavLink>
+                  </li>
+                  <li className='more__menu__items'>
+                    <NavLink to="#" className='more__menu__link'>
+                      <LightModeOutlined />
+                      <span>Switch Appearances</span>
+                    </NavLink>
+                  </li>
+                  <li className='more__menu__items'>
+                    <NavLink to="#" onClick={handleLogout} className='more__menu__link'>
+                      <span>Logout</span>
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
           </div>
         </div>
         {/* <div className="sidebar__container__searchbox" style={{ display: !isOpen ? "flex" : "none" }}> */}
