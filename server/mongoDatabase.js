@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
+const { DATABASE_URL } = require('./config/keys')
 
-const mongoString = process.env.DATABASE_URL
+const mongoString = process.env.DATABASE_URL || DATABASE_URL
 
 mongoose.connect(mongoString)
 

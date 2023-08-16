@@ -32,7 +32,8 @@ router.post('/create-post', authMiddleware, (req, res) => {
 router.get('/posts', authMiddleware, (req, res) => {
     PostModel
     .find()
-    .populate('postedBy', '_id name')
+    .sort('-createdAt')
+    .populate('postedBy', '_id name email profile_pic followers following')
     .populate('comments.commentedBy', '_id name')
     .then((posts) => {
         res.status(200).json(getResponse(200, 'Success', 'Posts Fetched Successfully!', posts))
@@ -45,8 +46,9 @@ router.get('/posts', authMiddleware, (req, res) => {
 router.get('/myposts', authMiddleware, (req, res) => {
     PostModel
     .find({ postedBy: req.user._id })
+    .sort('-createdAt')
     .populate('postedBy', '_id name')
-    .populate('comments.commentedBy', '_id name')
+    .populate('comments.commentedBy', '_id name email profile_pic followers following')
     .then((posts) => {
         res.status(200).json(getResponse(200, 'Success', 'Post Fetched Successfully!', posts))
     })
@@ -88,7 +90,7 @@ router.put('/like', authMiddleware, (req, res) => {
         }, {
             new: true
         })
-        .populate('postedBy', '_id name')
+        .populate('postedBy', '_id name profile_pic followers following')
         .then((data) => {
             res.status(200).json(getResponse(200, 'Success', 'Post Liked.', data))
         }).catch((err) => {
@@ -109,7 +111,7 @@ router.put('/unlike', authMiddleware, (req, res) => {
     }, {
         new: true
     })
-    .populate('postedBy', '_id name')
+    .populate('postedBy', '_id name profile_pic followers following')
     .populate('comments.commentedBy', '_id name')
     .then((data) => {
         res.status(200).json(getResponse(200, 'Success', 'Post Unliked.', data))
@@ -140,6 +142,9 @@ router.put('/create-comment', authMiddleware, (req, res) => {
 })
 
 router.delete('/delete-post/:postId', authMiddleware, (req, res) => {
+    // to delete image from cloudinary, append imgPublicId with postId in params,
+    // then here split it & perform both the deletions separately as cloudinary api needs
+    // api_key to send with destroy api
     PostModel.findOne({
         _id: req.params.postId
     })

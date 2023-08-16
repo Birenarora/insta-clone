@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const UserModel = require('../models/users')
+const { JWT_SECRET } = require('../config/keys')
 
 module.exports = (req, res, next) => {
     const { authorization } = req.headers
@@ -14,7 +15,7 @@ module.exports = (req, res, next) => {
 
     const token = authorization.replace("Bearer ", "")
 
-    jwt.verify(token, process.env.JWT_SECRET, (error, payload) => {
+    jwt.verify(token, process.env.JWT_SECRET || JWT_SECRET, (error, payload) => {
         if (error) {
             return res.status(401).json({
                 "statusCode": 401,
