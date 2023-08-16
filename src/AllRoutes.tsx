@@ -7,6 +7,7 @@ import Profile from './components/Profile/Profile';
 import SideNavbar from './components/SideNavbar/SideNavbar';
 import BaseLayout from './layouts/BaseLayout';
 import { useStateValue } from './hooks/StateProvider';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 
 function AllRoutes() {
 
@@ -48,6 +49,9 @@ function AllRoutes() {
             } />
             <Route path='/signup' element={<Signup />} />
             <Route path='/profile' element={<BaseLayout children={<Profile />} />} />
+            <Route path='/profile/:userId' element={<BaseLayout children={<Profile />} />} />
+            <Route path='/reset' element={<ResetPassword />} />
+            <Route path='/reset/:token' element={<ResetPassword />} />
         </Routes>
     </div>
   )

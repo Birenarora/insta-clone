@@ -1,10 +1,19 @@
 import React, { ChangeEvent, useState } from 'react'
 import './SideNavbar.css'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { AccountCircle, AddCircleOutline, CancelRounded, Explore, HomeOutlined, LightModeOutlined, Notifications, OndemandVideo, Search, SettingsOutlined } from '@mui/icons-material'
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { AccountCircle, AddCircleOutline, CancelRounded, DoneOutlined, Explore, HomeOutlined, LightModeOutlined, Notifications, OndemandVideo, Search, SettingsOutlined } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useOutsideClick } from '../../hooks/OutsideClick';
 import { useStateValue } from '../../hooks/StateProvider';
+import axios from 'axios';
+
+type SearchUsers = {
+  _id: string,
+  name: string,
+  email: string,
+  profile_pic: string,
+  followers: string[]
+}[]
 
 function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => void }) {
 
@@ -65,6 +74,10 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const { state, dispatch } = useStateValue()
   const navigate = useNavigate()
+  const routeParams = useParams()
+  const [searchedUsers, setSearchedUsers] = useState<SearchUsers>([])
+  const { user_details } = state
+  const loggedInUserData = JSON.parse(localStorage.getItem('user-details') || '{}')
 
   const divRef = useOutsideClick(() => {
     setIsOpen(true)
@@ -78,16 +91,28 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
       setSearchText('')
     } else {
       setSearchText(e.target.value)
+
+      axios.get(`/search/${e.target.value}`, {
+        headers: {
+          'Authorization': 'Bearer ' + loggedInUserData.token
+        }
+      })
+      .then((res) => {
+        setSearchedUsers(res.data.response)
+      })
+      .catch((e) => {
+        console.log(e.message);
+        
+      })
     }
-    
-  }  
+  }    
 
   const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
 
     let userData = JSON.parse(localStorage.getItem('user-details') || '{}')
 
-    console.log(userData);
+    // console.log(userData);
     
     if (state.user_details || Object.keys(userData).length !== 0) {
       dispatch({
@@ -98,6 +123,22 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
     }
 
     window.location.href = '/'
+  }
+
+  const handleProfileRoute = () => {
+    if (Object.keys(routeParams).length !== 0) {
+      window.location.href = '/profile'
+    }
+  }  
+
+  const goToProfile = (userId: string) => {
+    if (loggedInUserData.user._id === userId) {
+      navigate('/profile')
+    } else {
+      navigate(`/profile/${userId}`)
+    }
+    setIsOpen(true)
+    setSearchText('')
   }
 
   return (
@@ -115,7 +156,7 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
             const isActiveLink = (routeName.pathname.includes(value.to) && value.to.length > 1) || routeName.pathname === value.to
 
             return (
-              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : () => {return null}}>
+              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : () => {return null}}>
                 <div className="menu__link__icon">{value.icon}</div>
                 <div className="menu__link__text" style={{ display: isOpen ? 'block' : 'none' }}>{value.item}</div>
               </NavLink>
@@ -155,12 +196,35 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
           <div className="sidebar__container__searchbox__header">
             <h2>Search</h2>
             <div className="sidebar__container__searchbox__header__subbox">
-              <input type="text" placeholder='Search...' onChange={handleCloseIcon} />
-              <CancelRounded fontSize='small' style={{ display: searchText !== '' ? "block" : "none" }} />
+              <input type="text" placeholder='Search...' onChange={handleCloseIcon} value={searchText} />
+              <span onClick={() => setSearchText('')} style={{ display: searchText !== '' ? "block" : "none", cursor: 'pointer' }}><CancelRounded fontSize='small' /></span>
             </div>
           </div>
           <div className="sidebar__container__searchbox__body">
-            
+            {Object.keys(searchedUsers).length !== 0 && searchedUsers?.map((value, key) => {
+              return (searchText !== '' &&
+              <div key={key} className="sidebar__container__searchbox__body__content" onClick={() => goToProfile(value._id)}>
+                <div className="sidebar__container__searchbox__body__content__profilepic">
+                  <img src={value.profile_pic} alt="profile.png" />
+                </div>
+                <div className="sidebar__container__searchbox__body__content__details">
+                  <span>{value.name}</span>
+                  <span>{value.email}</span>
+                </div>
+                {value.followers.includes(user_details.user._id) && <DoneOutlined />}
+              </div>
+              )
+            })}
+            {/* <div className="sidebar__container__searchbox__body__content">
+              <div className="sidebar__container__searchbox__body__content__profilepic">
+                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
+              </div>
+              <div className="sidebar__container__searchbox__body__content__details">
+                <span>Test</span>
+                <span>test@test.in</span>
+              </div>
+              <DoneOutlined />
+            </div> */}
           </div>
         </div>
     </div>

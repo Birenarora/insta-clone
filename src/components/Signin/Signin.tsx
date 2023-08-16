@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import './Signin.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { Alert, Snackbar } from '@mui/material'
@@ -23,6 +23,7 @@ function Signin() {
   const [alertMessage, setAlertMessage] = useState({value: false, type: '', message: ''})
   const navigate = useNavigate()
   const { state, dispatch } = useStateValue()
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFormData = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -115,8 +116,8 @@ function Signin() {
         <form noValidate>
           <h1>Instagram</h1>
             <div className="signin__container__box__subbox">
-              <input name='input_email' type="email" className='signin__container__box__subbox__input' placeholder=' ' value={formData.input_email} onChange={handleFormData}/>
-              <label htmlFor="" className='signin__container__box__subbox__label'>Email Address</label>
+              <input ref={inputRef} name='input_email' type="email" className='signin__container__box__subbox__input' placeholder=' ' value={formData.input_email} onChange={handleFormData}/>
+              <label htmlFor="input_email" className='signin__container__box__subbox__label' onClick={() => inputRef.current?.click()}>Email Address</label>
               {<span className='form__errors'>{formDataError.input_email_error}</span>}
             </div>
             <div className="signin__container__box__subbox">
@@ -127,7 +128,7 @@ function Signin() {
             <div className="signin__container__box__subbox">
             <button className={`signin__submit__button ${formSubmitLoader && 'loader'}`} onClick={submitForm}>{formSubmitLoader ? '' : 'Log In'}</button>
             </div>
-            <Link to='#' className='signin__hyperlinks'>Forgot Password?</Link>
+            <Link to='/reset' className='signin__hyperlinks'>Forgot Password?</Link>
         </form>
       </div>
 

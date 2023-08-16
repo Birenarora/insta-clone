@@ -68,9 +68,16 @@
     margin: 0 10px;
 }
 
-.home__container__box__card__header__left > span:nth-child(2) {
+.common__username {
     font-size: 14px;
     font-weight: 600;
+    text-decoration: none;
+    color: black;
+    vertical-align: top;
+}
+
+.common__username:hover {
+    color: rgb(0 0 0 / 40%);
 }
 
 .common__time {
@@ -306,9 +313,114 @@
     cursor: pointer;
 }
 
-.postoptions__menu__items:nth-child(1) {
-    color: red;
+.home__container__box__card__header__left__username {
+    position: relative;
+}
+
+.home__container__box__card__header__left__username__box {
+    width: 320px;
+    /* height: 100px; */
+    position: absolute;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    box-shadow: 0 0 5px 5px lightgray;
+}
+
+.home__container__box__card__header__left__username__box__section1 {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 5px;
+}
+
+.home__container__box__card__header__left__username__box__section2 {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    padding: 10px 5px;
+    border-bottom: 1px solid lightgray;
+}
+
+.home__container__box__card__header__left__username__box__section2__subbox {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+}
+
+.home__container__box__card__header__left__username__box__section3 {
+    display: flex;
+    flex: 1;
+    padding: 10px 5px;
+    justify-content: space-between;
+}
+
+.home__container__box__card__header__left__username__box__section3 > img {
+    width: 100px;
+    height: 100px;
+}
+
+.home__container__box__card__header__left__username__box__section4 {
+    flex: 1;
+    padding: 10px 5px;
+}
+
+.home__container__box__card__header__left__username__box__section4__edit,
+.home__container__box__card__header__left__username__box__section4__following {
+    width: 100%;
+    position: relative;
+}
+
+.home__container__box__card__header__left__username__box__section4__follow {
+    width: 100%;
+    position: relative;
+    color: white;
+}
+
+.home__container__box__card__header__left__username__box__section4__edit > svg,
+.home__container__box__card__header__left__username__box__section4__following > svg {
+    position: absolute;
+    top: 5px;
+    left: 32%;
+    cursor: pointer;
+}
+
+.home__container__box__card__header__left__username__box__section4__follow > svg {
+    position: absolute;
+    top: 5px;
+    left: 35%;
+    cursor: pointer;
+}
+
+.home__container__box__card__header__left__username__box__section4__edit > button,
+.home__container__box__card__header__left__username__box__section4__following > button {
+    width: 100%;
+    height: 30px;
+    background-color: rgb(0 0 0 / 10%);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    font-size: 14px;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.home__container__box__card__header__left__username__box__section4__follow > button {
+    width: 100%;
+    height: 30px;
+    background-color: rgba(0, 0, 255);
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 1200px){
@@ -338,9 +450,23 @@
 }
 
 @media only screen and (max-width: 400px){
-    
+    .home__container__box__card__header__left__username__box {
+        left: -50px;
+    }
 }
 
 @media only screen and (max-width: 360px){
-    
+    .home__container__box__card__header__left__username__box {
+        left: -50px;
+        /* top: 30px; */
+        width: 260px;
+    }
+
+    .home__container__box__card__header__left__username__box__section3 > img {
+        width: 80px;
+    }
+
+    .home__container__box__card__header__left__username__box__section4__editprofile > svg {
+        left: 28%;
+    }
 }

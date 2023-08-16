@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import './Home.css'
-import { Favorite, FavoriteBorder, ModeCommentOutlined, Telegram } from '@mui/icons-material'
+import { DoneOutlined, Favorite, FavoriteBorder, ManageAccountsOutlined, ModeCommentOutlined, PersonAddOutlined, Telegram } from '@mui/icons-material'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useOutsideClick } from '../../hooks/OutsideClick'
@@ -27,7 +27,11 @@ type PostsStructure = {
   commenting_visibility: Boolean,
   postedBy: {
     _id: string,
-    name: string
+    name: string,
+    email: string,
+    profile_pic: string;
+    followers: string,
+    following: string
   }
 }[]
 
@@ -40,6 +44,48 @@ type PostsLikeStructure = {
 
 type PostsCommentsStructure = {
   [post_id: string]: string
+}
+
+type UserProfileStructure = {
+  [post_id: string]: Boolean
+}
+
+type UserPostsStructure = {
+  user: {
+    _id: string,
+    name: string,
+    email: string,
+    profile_pic: string;
+    followers: string,
+    following: string
+  },
+  post: {
+    _id: string,
+    title: string,
+    body: string,
+    photo: string,
+    likes: {}[],
+    likes_count_visibility: Boolean,
+    comments: {
+        text: string,
+        commentedBy:{
+            _id: string,
+            name: string,
+        },
+        updatedAt: string,
+        _id: string,
+        createdAt: string
+    }[],
+    commenting_visibility: Boolean,
+    postedBy: {
+      _id: string,
+      name: string,
+      email: string,
+      profile_pic: string;
+      followers: string,
+      following: string
+    }
+  }[] 
 }
 
 function Home() {
@@ -58,6 +104,99 @@ function Home() {
   const [alertMessage, setAlertMessage] = useState({value: false, type: '', message: ''})
   const [likesToggle, setLikesToggle] = useState<Boolean | string>('')
   const [commentingToggle, setCommentingToggle] = useState<Boolean | string>('')
+  const [isUserProfileOpen, setIsUserProfileOpen] = useState<ReactNode>('')
+  const [userPosts, setUserPosts] = useState<UserPostsStructure>()
+  const [userProfileFlag, setUserProfileFlag] = useState<UserProfileStructure>({})
+  const [loadingUserProfile, setLoadingUserProfile] = useState(false)
+  const [postImagePublicId, setPostImagePublicId] = useState('')
+
+  const renderComp = (post_id: string, user_id: string, posts: PostsStructure) => {
+    // setLoadingUserProfile(true)
+    // let userId = user_id
+    // axios.get(`/user-shortdetails/${userId}`, {
+    //   headers: {
+    //     'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user-details') || '{}').token
+    //   }
+    // }).then((res) => {            
+    //   setUserPosts(res.data.response)
+    //   setLoadingUserProfile(false)
+    // }).catch((e) => {
+    //   console.log(e.message);
+      
+    // })    
+    return (
+      <>
+        {Object.values(posts).map((value, key) => {
+          let totalPostsCountPerUser = posts.filter((post) => post.postedBy._id === user_id).length
+          let postsPerUser = posts.filter((post) => post.postedBy._id === user_id).map((post) => ({photo: post.photo})).splice(0,3)          
+
+          return (value._id === post_id) && (
+            <div key={key} className='home__container__box__card__header__left__username__box'>
+              <div className="home__container__box__card__header__left__username__box__section1">
+                <img className='common__image' style={{ width: '60px', height: '60px' }} src={value.postedBy.profile_pic} alt="profile.png" />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <Link className='common__username' to={userData.user._id === value.postedBy._id ? '/profile' : `/profile/${value.postedBy._id}`}><span>{value.postedBy.name}</span></Link>
+                  <span style={{ color: 'darkgray', fontStyle: 'italic', fontSize: '14px' }}>{value.postedBy.email}</span>
+                </div>
+              </div>
+              <div className="home__container__box__card__header__left__username__box__section2">
+                <div className="home__container__box__card__header__left__username__box__section2__subbox">
+                  <span><strong>{totalPostsCountPerUser}</strong></span>
+                  <span>posts</span>             
+                </div>
+                <div className="home__container__box__card__header__left__username__box__section2__subbox">
+                  <span><strong>{value.postedBy.followers.length}</strong></span>
+                  <span>followers</span>
+                </div>
+                <div className="home__container__box__card__header__left__username__box__section2__subbox">
+                  <span><strong>{value.postedBy.following.length}</strong></span>
+                  <span>following</span>
+                </div>
+              </div>
+              <div className="home__container__box__card__header__left__username__box__section3">
+              {postsPerUser.map((value, key) => {
+                return (
+                  <img key={key} src={value.photo} alt="img.png" />
+                )
+              })}
+              </div>
+              <div className="home__container__box__card__header__left__username__box__section4">
+              {value.postedBy._id === userData.user._id ? 
+              <div className='home__container__box__card__header__left__username__box__section4__edit'>
+                <ManageAccountsOutlined fontSize='small' />
+                <button>Edit Profile</button>
+              </div>
+              :
+              value.postedBy.followers.includes(userData.user._id) ?
+              <div className='home__container__box__card__header__left__username__box__section4__following'>
+                <DoneOutlined fontSize='small' />
+                <button>Unfollow</button>
+              </div> 
+              :
+              <div className='home__container__box__card__header__left__username__box__section4__follow'>
+                <PersonAddOutlined fontSize='small' />
+                <button>Follow</button>
+              </div>
+              }
+              </div>
+            </div>
+          )
+        })
+        }
+      </>
+    )
+  }
+
+  const handleUserProfileBoxHover = (post_id: string, user_id: string, posts: PostsStructure) => {
+    setIsUserProfileOpen(renderComp(post_id, user_id, posts))
+    setUserProfileFlag({ [post_id]: true })
+  }
+
+  const handleUserProfileBoxLeave = () => {
+    setIsUserProfileOpen('')
+    setUserProfileFlag({})
+  }
+  
 
   useEffect(() => {
     axios.get('/posts', {
@@ -201,7 +340,9 @@ function Home() {
     }
   }
 
-  const handlePostOptionsBox = (postId: string, posted_by_id: string, likes_toggle: Boolean, commenting_toggle: Boolean) => {
+  const handlePostOptionsBox = (postId: string, posted_by_id: string, likes_toggle: Boolean, commenting_toggle: Boolean, postPhoto: string) => {
+
+    const imgPublicId = postPhoto.split('/')[postPhoto.split('/').length - 1].split('.')[0]    
 
     if (isPostOptionsOpen) {
       setIsPostOptionsOpen(false)
@@ -209,16 +350,18 @@ function Home() {
       setPostedById('')
       setLikesToggle('')
       setCommentingToggle('')
+      setPostImagePublicId('')
     } else {
       setIsPostOptionsOpen(true)
       setCommentsPostId(postId)
       setPostedById(posted_by_id)
       setLikesToggle(likes_toggle)
       setCommentingToggle(commenting_toggle)
+      setPostImagePublicId(imgPublicId)
     }
   }
 
-  const handleDeletePost = (postId: string) => {
+  const handleDeletePost = (postId: string, imgPublicId:string) => {
     axios.delete(`/delete-post/${postId}`, {
       headers: {
         'Authorization': 'Bearer ' + userData.token
@@ -302,17 +445,23 @@ function Home() {
         <img src="https://images.unsplash.com/photo-1473830394358-91588751b241?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="test.png" />
       </div>
       <div className="home__container__box">
-        {postsData?.map((value, key) => {          
+        {postsData?.map((value, key) => {   
+                 
           return (
             <div className="home__container__box__card" key={value._id}>
               <div className="home__container__box__card__header">
                 <div className="home__container__box__card__header__left">
-                  <img className='common__image' src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
-                  <span>{value.postedBy.name}</span>
+                  <img className='common__image' src={value.postedBy.profile_pic} alt="profile.png" />
+                  <div onMouseOver={() => handleUserProfileBoxHover(value._id, value.postedBy._id, postsData)} onMouseLeave={() => handleUserProfileBoxLeave()} className='home__container__box__card__header__left__username'>
+                  {/* <div onClick={() => handleUserProfileBoxHover(value._id, value.postedBy._id, postsData)} className='home__container__box__card__header__left__username'> */}
+                    <Link className='common__username' to={userData?.user?._id === value.postedBy._id ? '/profile' : `/profile/${value.postedBy._id}`}><span>{value.postedBy.name}</span></Link>
+                    {/* <span>{value.postedBy.name}</span> */}
+                    {Object.keys(userProfileFlag).some((id) => id === value._id) && isUserProfileOpen}
+                  </div>
                   <span></span>
                   <span className='common__time'>9 h</span>
                 </div>
-                <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility)} className="home__container__box__card__header__right">
+                <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility, value.photo)} className="home__container__box__card__header__right">
                   <span></span>
                   <span></span>
                   <span></span>
@@ -425,7 +574,7 @@ function Home() {
                     <img className='common__image' src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
                     <span>{value.postedBy.name}</span>
                   </div>
-                  <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility)} className="comments__container__box__card__header__right">
+                  <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility, value.photo)} className="comments__container__box__card__header__right">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -502,7 +651,7 @@ function Home() {
           <ul>
             {userData.user._id === postedById &&
             <>
-              <li className='postoptions__menu__items' onClick={() => handleDeletePost(commentsPostId)}>Delete</li>
+              <li className='postoptions__menu__items' onClick={() => handleDeletePost(commentsPostId, postImagePublicId)} style={{ color: 'red', fontWeight: '600' }}>Delete</li>
               <li className='postoptions__menu__items'>Edit</li>
               {likesToggle ?
               <li className='postoptions__menu__items' onClick={() => handleLikesVisibilityToggle(commentsPostId, false)}>Hide like count</li>
@@ -516,9 +665,9 @@ function Home() {
               }
             </>
             }
-            <li className='postoptions__menu__items' onClick={() => navigate('/profile')}>Go to post</li>
+            <li className='postoptions__menu__items' onClick={() => userData.user._id === postedById ? navigate('/profile') : navigate('/profile/'+postedById)}>Go to post</li>
             <li className='postoptions__menu__items'>Share to...</li>
-            <li className='postoptions__menu__items' onClick={() => navigate('/profile')}>About this account</li>
+            <li className='postoptions__menu__items' onClick={() => userData.user._id === postedById ? navigate('/profile') : navigate('/profile/'+postedById)}>About this account</li>
             <li className='postoptions__menu__items' onClick={() => setIsPostOptionsOpen(false)}>Cancel</li>
           </ul>
         </div>
