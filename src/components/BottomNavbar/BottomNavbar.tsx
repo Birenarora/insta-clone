@@ -16,7 +16,7 @@ function BottomNavbar() {
       "id": "2",
       "item" : "Search",
       "icon" : <Search fontSize='medium' />,
-      "to": "#"
+      "to": "/search"
     },
     {
       "id": "4",

@@ -8,6 +8,8 @@ import SideNavbar from './components/SideNavbar/SideNavbar';
 import BaseLayout from './layouts/BaseLayout';
 import { useStateValue } from './hooks/StateProvider';
 import ResetPassword from './components/ResetPassword/ResetPassword';
+import SearchUser from './components/SearchUser/SearchUser';
+import { useWindowWide } from './hooks/windowWide';
 
 function AllRoutes() {
 
@@ -15,7 +17,8 @@ function AllRoutes() {
     const { state, dispatch } = useStateValue()
     const { user_details } = state
     const routeLocation = useLocation()
-    const navigate = useNavigate()    
+    const navigate = useNavigate()
+    const wide = useWindowWide(480) // for mobile view, search component    
 
     useEffect(() => {
       let userData = JSON.parse(localStorage.getItem('user-details') || '{}')
@@ -38,8 +41,12 @@ function AllRoutes() {
         //   window.location.href = '/'
         // }
       }
+      
+      if (wide && routeLocation.pathname.includes('search')) {
+        navigate('/')
+      }
 
-    }, [])
+    }, [wide])
 
   return (
     <div>
@@ -52,6 +59,7 @@ function AllRoutes() {
             <Route path='/profile/:userId' element={<BaseLayout children={<Profile />} />} />
             <Route path='/reset' element={<ResetPassword />} />
             <Route path='/reset/:token' element={<ResetPassword />} />
+            <Route path={'/search'} element={<BaseLayout children={<SearchUser />} />} />
         </Routes>
     </div>
   )

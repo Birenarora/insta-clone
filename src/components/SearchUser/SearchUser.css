@@ -1,0 +1,101 @@
+.searchuser__container__searchbox {
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s ease;
+    background-color: white;
+    margin: 50px 0;
+    width: 100%;
+}
+
+.searchuser__container__searchbox__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid lightgray;
+    padding: 10px 20px;
+    padding-bottom: 30px;
+    position: relative;
+}
+
+.searchuser__container__searchbox__header > h2 {
+    font-weight: 500;
+    color: rgb(0 0 0 / 70%);
+    margin-bottom: 40px;
+}
+
+.searchuser__container__searchbox__header__subbox {
+    width: 100%;
+    position: relative;
+}
+
+.searchuser__container__searchbox__header__subbox > input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+    margin-top: 5px;
+    padding: 0 10px;
+    outline: none;
+    background-color: rgb(211 211 211 / 60%);
+    border: none;
+    border-radius: 5px;
+}
+
+.searchuser__container__searchbox__header__subbox > span > svg {
+    color: rgb(150, 150, 150);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.searchuser__container__searchbox__body {
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.searchuser__container__searchbox__body__content {
+    box-sizing: border-box;
+    /* width: 100%; nedd to know why this was overflowing if parent is scrollable*/ 
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.searchuser__container__searchbox__body__content:hover {
+    background-color: rgb(0 0 0 / 10%);
+}
+
+.searchuser__container__searchbox__body__content__profilepic {
+    width: 50px;
+    height: 50px;
+}
+
+.searchuser__container__searchbox__body__content__profilepic > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.searchuser__container__searchbox__body__content__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    margin-left: 10px;
+}
+
+.searchuser__container__searchbox__body__content__details span:nth-child(1) {
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
+}
+
+.searchuser__container__searchbox__body__content__details span:nth-child(2) {
+    font-size: 12px;
+    font-weight: 500;
+    color: gray;
+    font-style: italic;
+}
