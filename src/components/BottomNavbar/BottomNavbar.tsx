@@ -3,7 +3,7 @@ import './BottomNavbar.css'
 import { AccountCircle, HomeOutlined, OndemandVideo, Search } from '@mui/icons-material'
 import { NavLink, useLocation } from 'react-router-dom'
 
-function BottomNavbar() {
+function BottomNavbar({ handleIsCommonModalOpen } : { handleIsCommonModalOpen: () => void }) {
 
   const menuItem = [
     {
@@ -48,7 +48,7 @@ function BottomNavbar() {
           const isActiveLink = (routeName.pathname.includes(value.to) && value.to.length > 1) || routeName.pathname === value.to
 
           return (
-            <NavLink key={value.id} className={`bottom__menu__link ${isActiveLink && "activeBottomLink"}`} to={value.to}>
+            <NavLink key={value.id} className={`bottom__menu__link ${isActiveLink && "activeBottomLink"}`} to={value.to} onClick={value.id === '4' || value.id === '5' ? handleIsCommonModalOpen : () => {return null}}>
               {value.icon}
             </NavLink>
           )

@@ -19,6 +19,9 @@ type PostsStructure = {
       commentedBy:{
           _id: string,
           name: string,
+          profile_pic: string, 
+          followers: string[], 
+          following: string[]
       },
       updatedAt: string,
       _id: string,
@@ -30,9 +33,11 @@ type PostsStructure = {
     name: string,
     email: string,
     profile_pic: string;
-    followers: string,
-    following: string
-  }
+    followers: string[],
+    following: string[]
+  },
+  createdAt: string,
+  updatedAt: string
 }[]
 
 type PostsLikeStructure = {
@@ -56,8 +61,8 @@ type UserPostsStructure = {
     name: string,
     email: string,
     profile_pic: string;
-    followers: string,
-    following: string
+    followers: string[],
+    following: string[]
   },
   post: {
     _id: string,
@@ -71,6 +76,9 @@ type UserPostsStructure = {
         commentedBy:{
             _id: string,
             name: string,
+            profile_pic: string, 
+            followers: string[], 
+            following: string[]
         },
         updatedAt: string,
         _id: string,
@@ -82,9 +90,11 @@ type UserPostsStructure = {
       name: string,
       email: string,
       profile_pic: string;
-      followers: string,
-      following: string
-    }
+      followers: string[],
+      following: string[]
+    },
+    createdAt: string,
+    updatedAt: string
   }[] 
 }
 
@@ -93,7 +103,26 @@ function Home() {
   const navigate = useNavigate()
   const [likeState, setLikeState] = useState<PostsLikeStructure | undefined>()
   const [viewMoreText, setViewMoreText] = useState(false)
-  const [postsData, setPostsData] = useState<PostsStructure | undefined>()
+  const [postsData, setPostsData] = useState<PostsStructure>([{
+    _id: '',
+    title: '',
+    body: '',
+    photo: '',
+    likes: [],
+    likes_count_visibility: true,
+    comments: [],
+    commenting_visibility: true,
+    postedBy: {
+      _id: '',
+      name: '',
+      email: '',
+      profile_pic: '',
+      followers: [],
+      following: []
+    },
+    createdAt: '',
+    updatedAt: ''
+  }])
   const [commentsState, setCommentsState] = useState<PostsCommentsStructure>()
   const [commentsBoxState, setCommentsBoxState] = useState<PostsCommentsStructure>()
   const userData = JSON.parse(localStorage.getItem('user-details') || '{}')
@@ -105,7 +134,17 @@ function Home() {
   const [likesToggle, setLikesToggle] = useState<Boolean | string>('')
   const [commentingToggle, setCommentingToggle] = useState<Boolean | string>('')
   const [isUserProfileOpen, setIsUserProfileOpen] = useState<ReactNode>('')
-  const [userPosts, setUserPosts] = useState<UserPostsStructure>()
+  const [userPosts, setUserPosts] = useState<UserPostsStructure>({
+    user: {
+      _id: '',
+      name: '',
+      email: '',
+      profile_pic: '',
+      followers: [],
+      following: [],
+    },
+    post: []
+  })
   const [userProfileFlag, setUserProfileFlag] = useState<UserProfileStructure>({})
   const [loadingUserProfile, setLoadingUserProfile] = useState(false)
   const [postImagePublicId, setPostImagePublicId] = useState('')
@@ -170,12 +209,12 @@ function Home() {
               value.postedBy.followers.includes(userData.user._id) ?
               <div className='home__container__box__card__header__left__username__box__section4__following'>
                 <DoneOutlined fontSize='small' />
-                <button>Unfollow</button>
+                <button onClick={() => handleUnfollow(value.postedBy._id)}>Unfollow</button>
               </div> 
               :
               <div className='home__container__box__card__header__left__username__box__section4__follow'>
                 <PersonAddOutlined fontSize='small' />
-                <button>Follow</button>
+                <button onClick={() => handleFollow(value._id, value.postedBy._id)}>Follow</button>
               </div>
               }
               </div>
@@ -421,6 +460,48 @@ function Home() {
     })
   }
 
+  const handleFollow = (postId: string, followId: string | undefined) => {
+    axios.put('/follow', {
+      userId: followId
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + userData.token
+      }
+    }).then((res) => {
+      // setUserPosts((prev) => ({...prev, user: {...prev.user, followers: [...prev.user.followers, res.data._id]}}))
+      setUserPosts((prev) => ({...prev, user: res.data.response}))
+      // const updatedPostsData = [...postsData];
+      // const postIndex = updatedPostsData.findIndex(post => post._id === postId);
+
+      // if (postIndex !== -1) {
+      //   updatedPostsData[postIndex].postedBy = res.data.response;
+      //   setPostsData(updatedPostsData);
+      // }
+      // showing loggedin users details when applying above logic, need to correct it
+      localStorage.setItem('user-details', JSON.stringify({...userData, user: res.data.response}))
+      window.location.reload()
+    }).catch((e) => {
+      console.log(e.message);
+    })
+  }   
+  
+  const handleUnfollow = (unfollowId: string | undefined) => {
+    axios.put('/unfollow', {
+      userId: unfollowId
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + userData.token
+      }
+    }).then((res) => {
+      // setUserPosts((prev) => ({...prev, user: {...prev.user, followers: [...prev.user.followers, res.data._id]}}))
+      setUserPosts((prev) => ({...prev, user: res.data.response}))
+      localStorage.setItem('user-details', JSON.stringify({...userData, user: res.data.response}))
+      window.location.reload()
+    }).catch((e) => {
+      console.log(e.message);
+    })
+  } 
+
   return (
     <div className='home__container'>
       {alertMessage.value && 
@@ -445,7 +526,31 @@ function Home() {
         <img src="https://images.unsplash.com/photo-1473830394358-91588751b241?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="test.png" />
       </div>
       <div className="home__container__box">
-        {postsData?.map((value, key) => {   
+        {postsData?.map((value, key) => {  
+          
+          let postedDate = moment(value.createdAt)
+          let currentDate = moment(new Date())
+          let dateDiffSeconds = currentDate.diff(postedDate, 's')
+          let dateDiffMins = currentDate.diff(postedDate, 'm')
+          let dateDiffHours = currentDate.diff(postedDate, 'h')
+          let dateDiffDays = currentDate.diff(postedDate, 'days')
+          let dateDiffMonths = currentDate.diff(postedDate, 'months')
+          let dateDiffYears = currentDate.diff(postedDate, 'years')
+          let dateShow = null
+
+          if (dateDiffSeconds < 59) {
+            dateShow = dateDiffSeconds + ' s'
+          } else if (dateDiffMins < 60) {
+            dateShow = dateDiffMins + ' m'
+          } else if (dateDiffHours < 24) {
+            dateShow = dateDiffHours + ' h'
+          } else if (dateDiffDays <= 31) {
+            dateShow = dateDiffDays + 'd'
+          } else if (dateDiffMonths <= 12) {
+            dateShow = dateDiffMonths + 'mo'
+          } else {
+            dateShow = dateDiffYears + 'y'
+          }
                  
           return (
             <div className="home__container__box__card" key={value._id}>
@@ -459,7 +564,7 @@ function Home() {
                     {Object.keys(userProfileFlag).some((id) => id === value._id) && isUserProfileOpen}
                   </div>
                   <span></span>
-                  <span className='common__time'>9 h</span>
+                  <span className='common__time'>{dateShow}</span>
                 </div>
                 <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility, value.photo)} className="home__container__box__card__header__right">
                   <span></span>
@@ -479,7 +584,7 @@ function Home() {
                     <Link to='#' id={'like_'+value._id} onClick={handleLikesCount}><FavoriteBorder /></Link>
                   }
                   {/* <Link to='#' id={'like_'+value._id} onClick={handleLikesCount}>{likeState?.[value._id] ? <Favorite style={{ color: 'red' }} />  : <FavoriteBorder /> }</Link> */}
-                  <Link to='#'><ModeCommentOutlined /></Link>
+                  <Link to='#' onClick={() => { setIsCommentsOpen(true); setCommentsPostId(value._id); }}><ModeCommentOutlined /></Link>
                   <Link to='#'><Telegram /></Link>
                 </div>
                 {value.likes_count_visibility && <span className='post__likes__text'><strong>{value.likes.length}</strong> likes</span>}
@@ -566,12 +671,36 @@ function Home() {
         <div ref={divRef} className="comments__container__box">
           {postsData?.map((value, key) => {
             const flag = value._id === commentsPostId
+
+            let postedDate = moment(value.createdAt)
+            let currentDate = moment(new Date())
+            let dateDiffSeconds = currentDate.diff(postedDate, 's')
+            let dateDiffMins = currentDate.diff(postedDate, 'm')
+            let dateDiffHours = currentDate.diff(postedDate, 'h')
+            let dateDiffDays = currentDate.diff(postedDate, 'days')
+            let dateDiffMonths = currentDate.diff(postedDate, 'months')
+            let dateDiffYears = currentDate.diff(postedDate, 'years')
+            let dateShow = null
+
+            if (dateDiffSeconds < 59) {
+              dateShow = dateDiffSeconds + ' s'
+            } else if (dateDiffMins < 60) {
+              dateShow = dateDiffMins + ' m'
+            } else if (dateDiffHours < 24) {
+              dateShow = dateDiffHours + ' h'
+            } else if (dateDiffDays <= 31) {
+              dateShow = dateDiffDays + 'd'
+            } else if (dateDiffMonths <= 12) {
+              dateShow = dateDiffMonths + 'mo'
+            } else {
+              dateShow = dateDiffYears + 'y'
+            }
             
             return (flag &&
               <div key={key} className="comments__container__box__card">
                 <div className="comments__container__box__card__header">
                   <div className="comments__container__box__card__header__left">
-                    <img className='common__image' src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
+                    <img className='common__image' src={value.postedBy.profile_pic} alt="profile.png" />
                     <span>{value.postedBy.name}</span>
                   </div>
                   <div onClick={() => handlePostOptionsBox(value._id, value.postedBy._id, value.likes_count_visibility, value.commenting_visibility, value.photo)} className="comments__container__box__card__header__right">
@@ -583,11 +712,11 @@ function Home() {
                 <div className="comments__container__box__card__body">
                   <div className="comments__container__box__card__body__content">
                     <div>
-                      <img className='common__image' src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
+                      <img className='common__image' src={value.postedBy.profile_pic} alt="profile.png" />
                     </div>
                     <div className="comments__container__box__card__body__subcontent">
                       <span className='common__content'><strong>{value.postedBy.name}</strong> {value.body}</span>
-                      <span className='common__time'>9 h</span>
+                      <span className='common__time'>{dateShow}</span>
                     </div>
                   </div>
                     {value.comments.map((value1, key1) => {
@@ -623,7 +752,7 @@ function Home() {
                       return (
                         <div key={key1} className='comments__container__box__card__body__content'> 
                           <div>
-                            <img className='common__image' src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="profile.png" />
+                            <img className='common__image' src={value1.commentedBy.profile_pic} alt="profile.png" />
                           </div>
                           <div className="comments__container__box__card__body__subcontent">
                             <span className='common__content'><strong>{value1.commentedBy.name}</strong> {value1.text}</span>

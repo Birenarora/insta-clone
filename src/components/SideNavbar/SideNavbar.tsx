@@ -15,7 +15,7 @@ type SearchUsers = {
   followers: string[]
 }[]
 
-function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => void }) {
+function SideNavbar({ handleCreatePostOpen, handleIsCommonModalOpen } : { handleCreatePostOpen: () => void, handleIsCommonModalOpen: () => void }) {
 
   const menuItem = [
     {
@@ -156,7 +156,8 @@ function SideNavbar({ handleCreatePostOpen } : { handleCreatePostOpen: () => voi
             const isActiveLink = (routeName.pathname.includes(value.to) && value.to.length > 1) || routeName.pathname === value.to
 
             return (
-              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : () => {return null}}>
+              // <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : () => {return null}}>
+              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : handleIsCommonModalOpen }>
                 <div className="menu__link__icon">{value.icon}</div>
                 <div className="menu__link__text" style={{ display: isOpen ? 'block' : 'none' }}>{value.item}</div>
               </NavLink>

@@ -196,7 +196,7 @@
 
 @media only screen and (max-width: 480px){
     .profile__container__box {
-        margin: 0 40px;
+        margin: 0 20px;
         margin-top: 50px;
     }
     
@@ -220,6 +220,13 @@
     .profile__container__box {
         margin-left: 0;
         margin-right: 0;
+    }
+
+    .profile__container__box__right__heading__actions__editbtn,
+    .profile__container__box__right__heading__actions__followbtn,
+    .profile__container__box__right__heading__actions__unfollowbtn {
+        font-size: 12px;
+        padding: 0 8px;
     }
 }
 
