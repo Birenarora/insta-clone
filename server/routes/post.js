@@ -34,7 +34,7 @@ router.get('/posts', authMiddleware, (req, res) => {
     .find()
     .sort('-createdAt')
     .populate('postedBy', '_id name email profile_pic followers following')
-    .populate('comments.commentedBy', '_id name')
+    .populate('comments.commentedBy', '_id name profile_pic followers following')
     .then((posts) => {
         res.status(200).json(getResponse(200, 'Success', 'Posts Fetched Successfully!', posts))
     })
@@ -47,7 +47,7 @@ router.get('/myposts', authMiddleware, (req, res) => {
     PostModel
     .find({ postedBy: req.user._id })
     .sort('-createdAt')
-    .populate('postedBy', '_id name')
+    .populate('postedBy', '_id name email profile_pic followers following')
     .populate('comments.commentedBy', '_id name email profile_pic followers following')
     .then((posts) => {
         res.status(200).json(getResponse(200, 'Success', 'Post Fetched Successfully!', posts))
@@ -63,8 +63,8 @@ router.put('/like', authMiddleware, (req, res) => {
 
     PostModel
     .find()
-    .populate('postedBy', '_id name')
-    .populate('comments.commentedBy', '_id name')
+    .populate('postedBy', '_id name profile_pic followers following')
+    .populate('comments.commentedBy', '_id name profile_pic followers following')
     .then((posts) => {
 
         let postAlreadyLiked = false;
@@ -91,6 +91,7 @@ router.put('/like', authMiddleware, (req, res) => {
             new: true
         })
         .populate('postedBy', '_id name profile_pic followers following')
+        .populate('comments.commentedBy', '_id name profile_pic followers following')
         .then((data) => {
             res.status(200).json(getResponse(200, 'Success', 'Post Liked.', data))
         }).catch((err) => {
@@ -112,7 +113,7 @@ router.put('/unlike', authMiddleware, (req, res) => {
         new: true
     })
     .populate('postedBy', '_id name profile_pic followers following')
-    .populate('comments.commentedBy', '_id name')
+    .populate('comments.commentedBy', '_id name profile_pic followers following')
     .then((data) => {
         res.status(200).json(getResponse(200, 'Success', 'Post Unliked.', data))
     }).catch((err) => {
@@ -132,8 +133,8 @@ router.put('/create-comment', authMiddleware, (req, res) => {
     }, {
         new: true
     })
-    .populate('postedBy', '_id name')
-    .populate('comments.commentedBy', '_id name')
+    .populate('postedBy', '_id name profile_pic followers following')
+    .populate('comments.commentedBy', '_id name profile_pic followers following')
     .then((data) => {
         res.status(200).json(getResponse(200, 'Success', 'Comment Created Successfully..', data))
     }).catch((err) => {
@@ -194,8 +195,8 @@ router.put('/likes-count-toggle', authMiddleware, (req, res) => {
             }, {
                 new: true
             })
-            .populate('postedBy', '_id name')
-            .populate('comments.commentedBy', '_id name')
+            .populate('postedBy', '_id name profile_pic followers following')
+            .populate('comments.commentedBy', '_id name profile_pic followers following')
             .then((data) => {
                 res.status(200).json(getResponse(200, 'Success', 'Likes Count Visibility Updated.', data))
             }).catch((err) => {
@@ -237,8 +238,8 @@ router.put('/commenting-toggle', authMiddleware, (req, res) => {
             }, {
                 new: true
             })
-            .populate('postedBy', '_id name')
-            .populate('comments.commentedBy', '_id name')
+            .populate('postedBy', '_id name profile_pic followers following')
+            .populate('comments.commentedBy', '_id name profile_pic followers following')
             .then((data) => {
                 res.status(200).json(getResponse(200, 'Success', 'Commenting Visibility Updated.', data))
             }).catch((err) => {
