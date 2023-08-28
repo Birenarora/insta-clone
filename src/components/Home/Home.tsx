@@ -148,6 +148,7 @@ function Home() {
   const [userProfileFlag, setUserProfileFlag] = useState<UserProfileStructure>({})
   const [loadingUserProfile, setLoadingUserProfile] = useState(false)
   const [postImagePublicId, setPostImagePublicId] = useState('')
+  const [postsLoading, setPostsLoading] = useState(true)
 
   const renderComp = (post_id: string, user_id: string, posts: PostsStructure) => {
     // setLoadingUserProfile(true)
@@ -246,6 +247,7 @@ function Home() {
       // console.log(res.data.response);
       
       setPostsData(res.data.response)
+      setPostsLoading(false)
 
     //   res.data.response?.map((value: any, key: any) => {
     //     if (value.likes.length === 0) {
@@ -526,7 +528,10 @@ function Home() {
         <img src="https://images.unsplash.com/photo-1473830394358-91588751b241?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="test.png" />
       </div>
       <div className="home__container__box">
-        {postsData?.map((value, key) => {  
+        {postsLoading ?
+        <div className='loader'></div>
+        :
+        postsData?.map((value, key) => {  
           
           let postedDate = moment(value.createdAt)
           let currentDate = moment(new Date())

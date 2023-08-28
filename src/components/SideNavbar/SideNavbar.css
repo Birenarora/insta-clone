@@ -125,6 +125,10 @@
     height: 100%;
 }
 
+.sidebar__container__searchbox__body::-webkit-scrollbar {
+    display: none;
+}
+
 .sidebar__container__box__footer {
     position: relative;
 }

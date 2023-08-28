@@ -36,6 +36,7 @@ function AllRoutes() {
         // }
       } else {
         setIsLoggedIn(false)
+        navigate('/')
 
         // if (routeLocation.pathname.indexOf('profile')) {
         //   window.location.href = '/'

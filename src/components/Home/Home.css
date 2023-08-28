@@ -423,6 +423,27 @@
     cursor: pointer;
 }
 
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid gray;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: loadingRotate 1s linear infinite;
+}
+
+@keyframes loadingRotate {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 @media only screen and (max-width: 1200px){
 
 }

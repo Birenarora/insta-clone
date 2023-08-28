@@ -157,7 +157,7 @@ function SideNavbar({ handleCreatePostOpen, handleIsCommonModalOpen } : { handle
 
             return (
               // <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : () => {return null}}>
-              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : handleIsCommonModalOpen }>
+              <NavLink to={value.to} key={value.id} className={`menu__link ${isActiveLink && "activeNavLink"}`} onClick={value.id === "2" ? toggle : value.id === "7" ? handleCreatePostOpen : value.id === "8" ? handleProfileRoute : value.id === "1" ? () => {return null} : handleIsCommonModalOpen }>
                 <div className="menu__link__icon">{value.icon}</div>
                 <div className="menu__link__text" style={{ display: isOpen ? 'block' : 'none' }}>{value.item}</div>
               </NavLink>
