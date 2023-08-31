@@ -9,11 +9,15 @@
 }
 
 .home__container__story__caraousel {
-    height: 80px;
+    /* height: 80px; */
     display: flex;
     overflow: scroll;
     overflow-y: hidden;
     align-items: center;
+}
+
+.home__container__story__caraousel::-webkit-scrollbar {
+    display: none;
 }
 
 .home__container__story__caraousel > img {

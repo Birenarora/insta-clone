@@ -84,7 +84,9 @@ function SideNavbar({ handleCreatePostOpen, handleIsCommonModalOpen } : { handle
     // setIsMoreMenuOpen(false)
   })
 
-  const toggle = () => setIsOpen(!isOpen)
+  const toggle = () => {
+    setIsOpen(!isOpen)
+  }
 
   const handleCloseIcon = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
@@ -193,7 +195,7 @@ function SideNavbar({ handleCreatePostOpen, handleIsCommonModalOpen } : { handle
           </div>
         </div>
         {/* <div className="sidebar__container__searchbox" style={{ display: !isOpen ? "flex" : "none" }}> */}
-        <div ref={divRef} className="sidebar__container__searchbox" style={{ width: !isOpen ? "300px" : "0", opacity: !isOpen ? "1" : "0" }}>
+        <div ref={divRef} className="sidebar__container__searchbox" style={{ width: !isOpen ? "300px" : "0", opacity: !isOpen ? "1" : "0", left: !isOpen ? "80px" : "-1px" }}>
           <div className="sidebar__container__searchbox__header">
             <h2>Search</h2>
             <div className="sidebar__container__searchbox__header__subbox">
